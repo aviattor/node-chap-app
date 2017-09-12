@@ -5,15 +5,101 @@
 	<meta name="viewport"
 	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Socket Chat</title>
+	<title>SocketChat</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
 	
 </head>
 <body>
-	<div class="container">
-		<h1>Welcome to Socket Chat</h1>
+	<div class="container" id="app">
+		<h1>SocketChat</h1>
+		<div class="row">
+			
+			<div class="col-md-6">
+				
+				<div class="jumbotron">
+					<small>Send A Message</small>
+					<hr>
+					<form @submit.prevent="sendMessage">
+						<div class="form-group">
+							<input
+									v-model="message"
+									type="text"
+									class="form-control"
+									name="message"
+									id="message"
+									placeholder="Message...">
+						
+						</div>
+						
+						<div class="form-group">
+							<button class="btn btn-primary btn-lg btn-block" type="submit">Send</button>
+						</div>
+						
+						<transition
+								name="fade"
+								mode="out-in"
+								enter-active-class="animated fadeIn"
+								leave-active-class="animated fadeOut">
+							<div class="alert alert-info" v-show="notify">
+								<small>{{ notification}}</small>
+							</div>
+							
+						</transition>
+						
+						
+					</form>
+					<button class="btn btn-success btn-sm" @click="sendLocation">Send Location</button>
+				</div>
+			
+			</div>
+			
+			<div class="col-md-6">
+				
+				<div class="jumbotron" v-for="message in messages">
+					
+					<div v-if="message.locationURL">
+						<small>From: {{ message.from}}</small>
+						<br>
+						<small>Sent: {{ Date(message.createdAt, "dddd, mmmm dS, yyyy, h:MM:ss") }}</small>
+						<hr>
+						
+						<a :href="message.locationURL" target="_blank">View My Location</a>
+						
+					</div>
+					
+					<div v-else>
+						<small>From: {{ message.from}}</small>
+						<br>
+						<small>Sent: {{ Date(message.createdAt, "dddd, mmmm dS, yyyy, h:MM:ss") }}</small>
+						<hr>
+						
+						<p><small>Message:</small>
+							<br>{{ message.text}}</p>
+						
+					</div>
+					
+					
+				
+				</div>
+				<!--<div class="card">-->
+					<!--<ul class="list-group list-group-flush">-->
+						<!--<li class="list-group-item" v-for="message in messages">-->
+						<!---->
+							<!---->
+						<!--</li>-->
+						<!--<li class="list-group-item">Dapibus ac facilisis in</li>-->
+						<!--<li class="list-group-item">Vestibulum at eros</li>-->
+					<!--</ul>-->
+				<!--</div>-->
+			
+			</div>
+			
+		</div>
+		
+		
 	</div>
-	
+	<script src="https://unpkg.com/vue@2.4.2/dist/vue.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/index.js"></script>
 </body>
